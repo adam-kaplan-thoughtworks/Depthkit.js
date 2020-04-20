@@ -95,24 +95,23 @@
 			scene.add(gridHelper);
 
 			depthkit = new Depthkit();
-			depthkit.load('../assets/John/John.txt', '../assets/John/John.mp4',
-				dkCharacter => {
-					character = dkCharacter;
+			depthkit.load('../assets/Yashira/Yashira.txt', '../assets/Yashira/Yashira.mp4',
+					dkCharacter => {
+						character = dkCharacter;
 
-					//Position and rotation adjustments
-					dkCharacter.rotation.set( Math.PI - 0.25, 0, Math.PI / -2.0 );
-					// dkCharacter.rotation.y = Math.PI;
-					dkCharacter.position.set( -0.25, 0.92, 0 );
+						//Position and rotation adjustments
+						dkCharacter.rotation.set( Math.PI - 0.25, 0, Math.PI / -1 );
+						dkCharacter.position.set( -0.25, 0.62, 0 );
 
-					// Depthkit video playback control
-					depthkit.video.muted = "muted"; // Necessary for auto-play in chrome now
-					depthkit.setLoop( true );
-					depthkit.play();
+						// Depthkit video playback control
+						depthkit.video.muted = "muted"; // Necessary for auto-play in chrome now
+						depthkit.setLoop( true );
+						depthkit.play();
 
-					//Add the character to the scene
-					scene.add(character);
+						//Add the character to the scene
+						scene.add(character);
 
-				});
+					});
 
 
 			window.addEventListener( 'resize', onWindowResize, false );
