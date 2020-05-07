@@ -95,7 +95,11 @@
 			scene.add(gridHelper);
 
 			depthkit = new Depthkit();
-			depthkit.load('../assets/Yashira/Yashira.txt', '../assets/Yashira/Yashira.mp4',
+			var urlParams = new URLSearchParams(window.location.search);
+			var name = urlParams.get('name');
+			var txt = '../recordings/' + name + '/' + name + '.txt';
+			var vid = '../recordings/' + name + '/' + name + '.m4v';
+			depthkit.load(txt, vid,
 					dkCharacter => {
 						character = dkCharacter;
 
