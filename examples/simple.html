@@ -50,6 +50,8 @@
         <br />
         <br />
         Press 1, 2, 3 to change meshScalar. q/w to rotate around X-axis, a/s to rotate around Y-axis, z/x to rotate around Z-axis
+		<br />
+		Press m to toggle mute/unmute
     </div>
 
 	<script>
@@ -161,6 +163,9 @@
 		        case 65: // key 'a'                    
 		            character.rotation.y += rotationStep;
 		            break;
+				case 77: // key 'm'
+					depthkit.video.muted = !depthkit.video.muted;
+					break;
 		        case 83: // key 's'
 		            character.rotation.y -= rotationStep;
 		            break;
