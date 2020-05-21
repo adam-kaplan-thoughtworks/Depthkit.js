@@ -43,7 +43,10 @@
 	<script src="lib/OrbitControls.js"></script>
 	<!--Depthkit.js-->
 	<script src="../build/depthkit.js"></script>
-
+	<script crossorigin src="https://unpkg.com/react@16.13.1/umd/react.development.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@16.13.1/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+	<div id="root"></div>
     <div id="info">
         <a href="http://depthkit.tv" target="_blank" rel="noopener">Depthkit.js</a> - Simple example using Three.js<br /> Written
         by <a href="http://orfleisher.com">juniorxsound</a>
@@ -53,6 +56,49 @@
 		<br />
 		Press m to toggle mute/unmute
     </div>
+
+	<script type="text/babel">
+		const attendees = [
+			'Julien',
+			'John',
+			'Yashira',
+			'Valentina',
+			// 'Jeanne',
+			'Jesse',
+			'Kevin',
+			// 'Lisa',
+			// 'Maria',
+			// 'Andy',
+			'Loren',
+			// 'Ling',
+			// 'Pilar',
+			'Stephane',
+			// 'Ellen',
+			// 'Barrie',
+			// 'Bryan',
+			'Chanette',
+			'Filip',
+			'Javier',
+			// 'Anne',
+			// 'Leslie',
+			// 'Rebecca',
+			// 'Sean',
+		];
+
+		function Recording(props) {
+			const { name } = props;
+			return(<div>
+				{name}
+			</div>);
+		};
+
+
+		function Recordings() {
+			return attendees.map((name, index) => (<Recording name={name} key={index} />));
+		};
+
+		ReactDOM.render(<Recordings/>, document.getElementById('root'));
+	</script>
 
 	<script>
 
@@ -67,8 +113,43 @@
 		var character;
 		var rotationStep = Math.PI / 9.0;
 
+		var attendees = [
+			'Julien',
+			'John',
+			'Yashira',
+			'Valentina',
+			'Jeanne',
+			'Jesse',
+			'Kevin',
+			'Lisa',
+			'Maria',
+			'Andy',
+			'Loren',
+			'Ling',
+			'Pilar',
+			'Stephane',
+			'Ellen',
+			'Barrie',
+			'Bryan',
+			'Chanette',
+			'Filip',
+			'Javier',
+			'Anne',
+			'Leslie',
+			'Rebecca',
+			'Sean',
+		];
 
-		init();
+		// function Recording ({name}) {
+		//
+		// 	return(<div>
+		//
+		// 			{name}
+		// 			</div>);
+		// };
+
+
+		// init();
 
 		function init() {
 
