@@ -13,8 +13,8 @@
 			color: #fff;
 			padding: 0;
 			margin: 0;
-			overflow: hidden;
-			font-family: georgia;
+			/*overflow: hidden;*/
+			font-family: sans-serif;
 			text-align: center;
 		}
 
@@ -31,6 +31,27 @@
 			position:absolute;
 			top: 0; left: 0;
 			width: 20%;
+		}
+
+		.recording {
+			display: flex;
+			max-width: 550px;
+			margin: 30px auto;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			border: 1px solid #efefef;
+			border-radius: 20px;
+			padding: 30px;
+		}
+
+		.recording__thumbnail {
+			width: 512px;
+			height: 424px;
+		}
+
+		.recording__label {
+			margin-left: 50px;
 		}
 	</style>
 </head>
@@ -58,6 +79,13 @@
     </div>
 
 	<script type="text/babel">
+		let depthkit;
+		let renderer,
+				scene,
+				camera,
+				controls;
+		let character;
+		let rotationStep = Math.PI / 9.0;
 		const attendees = [
 			'Julien',
 			'John',
@@ -86,187 +114,211 @@
 		];
 
 		function Recording(props) {
-			const { name } = props;
-			return(<div>
-				{name}
+			const { name, setCurrentRecording } = props;
+			const videoFilePath = `../final-recordings/${name}/${name}.mp4`;
+			const txtFilePath = `../final-recordings/${name}/${name}.txt`;
+			const imgFilePath = `../final-recordings/${name}/${name}.png`;
+			return(<div className="recording" onClick={() => { setCurrentRecording(name) }}>
+				<div className="recording__thumbnail" style={{backgroundImage: `url(${imgFilePath})`}}>
+
+
+				</div>
+				<h2 className="recording__label">
+					{name}
+				</h2>
 			</div>);
 		};
 
 
-		function Recordings() {
-			return attendees.map((name, index) => (<Recording name={name} key={index} />));
+		function Recordings(props) {
+			return attendees.map((name, index) => (<Recording name={name} key={index} setCurrentRecording={props.setCurrentRecording}/>));
 		};
 
-		ReactDOM.render(<Recordings/>, document.getElementById('root'));
-	</script>
-
-	<script>
-
-		//Some general Three.js components
-		var renderer,
-		scene,
-		camera,
-		controls;
-
-		var depthkit;
-		//Depthkit character
-		var character;
-		var rotationStep = Math.PI / 9.0;
-
-		var attendees = [
-			'Julien',
-			'John',
-			'Yashira',
-			'Valentina',
-			'Jeanne',
-			'Jesse',
-			'Kevin',
-			'Lisa',
-			'Maria',
-			'Andy',
-			'Loren',
-			'Ling',
-			'Pilar',
-			'Stephane',
-			'Ellen',
-			'Barrie',
-			'Bryan',
-			'Chanette',
-			'Filip',
-			'Javier',
-			'Anne',
-			'Leslie',
-			'Rebecca',
-			'Sean',
-		];
-
-		// function Recording ({name}) {
-		//
-		// 	return(<div>
-		//
-		// 			{name}
-		// 			</div>);
-		// };
+		function DepthkitScene(props) {
+			const {name, setCurrentRecording } = props;
+			//Some general Three.js components
 
 
-		// init();
-
-		function init() {
-
-			//Setup renderer
-			renderer = new THREE.WebGLRenderer();
-			renderer.setPixelRatio( window.devicePixelRatio );
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
-
-			// Setup scene
-			scene = new THREE.Scene();
-			scene.background = new THREE.Color( 0x282828 );
-			scene.fog = new THREE.Fog( 0x282828, 0.0, 10.0 );
-
-			// Setup camera
-			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, .01, 20 );
-			camera.position.set( 0, 2, 3 );
-
-			// Setup controls
-			controls = new THREE.OrbitControls( camera );
-			controls.target.set(0, 0.75, 0);
-			camera.lookAt(controls.target);
-
-			// A grid helper as a floor reference
-			var gridHelper = new THREE.GridHelper( 50, 50 );
-			scene.add(gridHelper);
-
-			depthkit = new Depthkit();
-			var urlParams = new URLSearchParams(window.location.search);
-			var name = urlParams.get('name');
-			var txt = '../recordings/' + name + '/' + name + '.txt';
-			var vid = '../recordings/' + name + '/' + name + '.m4v';
-			depthkit.load(txt, vid,
-					dkCharacter => {
-						character = dkCharacter;
-
-						//Position and rotation adjustments
-						dkCharacter.rotation.set( Math.PI - 0.25, 0, Math.PI / -1 );
-						dkCharacter.position.set( -0.25, 0.62, 0 );
-
-						// Depthkit video playback control
-						depthkit.video.muted = "muted"; // Necessary for auto-play in chrome now
-						depthkit.setLoop( true );
-						depthkit.play();
-
-						//Add the character to the scene
-						scene.add(character);
-
-					});
+			// let depthkit;
+			//Depthkit character
 
 
-			window.addEventListener( 'resize', onWindowResize, false );
-			window.addEventListener('keydown', onKeyDown, false);
+			// var attendees = [
+			// 	'Julien',
+			// 	'John',
+			// 	'Yashira',
+			// 	'Valentina',
+			// 	'Jeanne',
+			// 	'Jesse',
+			// 	'Kevin',
+			// 	'Lisa',
+			// 	'Maria',
+			// 	'Andy',
+			// 	'Loren',
+			// 	'Ling',
+			// 	'Pilar',
+			// 	'Stephane',
+			// 	'Ellen',
+			// 	'Barrie',
+			// 	'Bryan',
+			// 	'Chanette',
+			// 	'Filip',
+			// 	'Javier',
+			// 	'Anne',
+			// 	'Leslie',
+			// 	'Rebecca',
+			// 	'Sean',
+			// ];
 
-			render();
+			// function Recording ({name}) {
+			//
+			// 	return(<div>
+			//
+			// 			{name}
+			// 			</div>);
+			// };
 
+
+			init();
+
+			function init() {
+
+				//Setup renderer
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				document.body.appendChild( renderer.domElement );
+
+				// Setup scene
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0x282828 );
+				scene.fog = new THREE.Fog( 0x282828, 0.0, 10.0 );
+
+				// Setup camera
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, .01, 20 );
+				camera.position.set( -0.176, 1.061, 1.31967 );
+
+				// Setup controls
+				controls = new THREE.OrbitControls( camera );
+				controls.target.set(0, 0.75, 0);
+				camera.lookAt(controls.target);
+
+				// A grid helper as a floor reference
+				var gridHelper = new THREE.GridHelper( 50, 50 );
+				scene.add(gridHelper);
+
+				depthkit = new Depthkit();
+				var urlParams = new URLSearchParams(window.location.search);
+				// var name = urlParams.get('name');
+				var txt = '../final-recordings/' + name + '/' + name + '.txt';
+				var vid = '../final-recordings/' + name + '/' + name + '.mp4';
+				depthkit.load(txt, vid,
+						dkCharacter => {
+							character = dkCharacter;
+
+							//Position and rotation adjustments
+							dkCharacter.rotation.set( Math.PI - 0.25, 0, Math.PI / -1 );
+							dkCharacter.position.set( -0.25, 0.62, 0 );
+
+							// Depthkit video playback control
+							depthkit.video.muted = false; // Necessary for auto-play in chrome now
+							depthkit.setLoop( true );
+							depthkit.play();
+
+							//Add the character to the scene
+							scene.add(character);
+
+
+						});
+
+
+				window.addEventListener( 'resize', onWindowResize, false );
+				window.addEventListener('keydown', onKeyDown, false);
+
+				render();
+
+			}
+
+			function render() {
+
+				requestAnimationFrame( render );
+
+				renderer.render( scene, camera );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onKeyDown(event) {
+				switch (event.keyCode) {
+					case 49: // key '1'
+						depthkit.setMeshScalar(1);
+						break;
+					case 50: // key '2'
+						depthkit.setMeshScalar(2);
+						break;
+					case 51: // key '3'
+						depthkit.setMeshScalar(3);
+						break;
+					case 81: // key 'q'
+						character.rotation.x += rotationStep;
+						break;
+					case 87: // key 'w'
+						character.rotation.x -= rotationStep;
+						break;
+					case 65: // key 'a'
+						character.rotation.y += rotationStep;
+						break;
+					case 77: // key 'm'
+						depthkit.video.muted = !depthkit.video.muted;
+						break;
+					case 83: // key 's'
+						character.rotation.y -= rotationStep;
+						break;
+					case 90: // key 'z'
+						character.rotation.z += rotationStep;
+						break;
+					case 88: // key 'x'
+						character.rotation.z -= rotationStep;
+						break;
+
+					default:
+						scene.updateMatrixWorld();
+
+						var v = new THREE.Vector3()
+						v.setFromMatrixPosition(character.matrixWorld);
+						console.log(v);
+
+						return;
+				}
+			}
+
+			function switchOffThreeJs() {
+				console.log('switching off threee.js ...');
+				document.body.removeChild(document.body.lastChild);
+				window.removeEventListener('resize', onWindowResize);
+				window.removeEventListener('keydown', onKeyDown);
+				// depthkit.dispose();
+				depthkit.stop();
+
+			}
+
+			return (<div><span onClick={() => {switchOffThreeJs(); setCurrentRecording('')}}>back</span> {name}</div>);
 		}
 
-		function render() {
+		function App() {
+			const [currentRecording, setCurrentRecording] = React.useState('');
 
-			requestAnimationFrame( render );
-
-			renderer.render( scene, camera );
-
+			return !! currentRecording ? (<DepthkitScene name={currentRecording} setCurrentRecording={setCurrentRecording} />) : (<Recordings setCurrentRecording={setCurrentRecording}/>);
 		}
 
-		function onWindowResize() {
-
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-
-		}
-
-		function onKeyDown(event) {
-		    switch (event.keyCode) {
-		        case 49: // key '1'
-		            depthkit.setMeshScalar(1);
-		            break;
-		        case 50: // key '2'
-		            depthkit.setMeshScalar(2);
-		            break;
-		        case 51: // key '3'
-		            depthkit.setMeshScalar(3);
-		            break;
-		        case 81: // key 'q'                    
-		            character.rotation.x += rotationStep;
-		            break;
-		        case 87: // key 'w'
-		            character.rotation.x -= rotationStep;
-		            break;
-		        case 65: // key 'a'                    
-		            character.rotation.y += rotationStep;
-		            break;
-				case 77: // key 'm'
-					depthkit.video.muted = !depthkit.video.muted;
-					break;
-		        case 83: // key 's'
-		            character.rotation.y -= rotationStep;
-		            break;
-		        case 90: // key 'z'                    
-		            character.rotation.z += rotationStep;
-		            break;
-		        case 88: // key 'x'
-		            character.rotation.z -= rotationStep;
-		            break;
-
-		        default:
-		            scene.updateMatrixWorld();
-
-		            var v = new THREE.Vector3()
-		            v.setFromMatrixPosition(character.matrixWorld);
-		            console.log(v);
-
-		            return;
-		    }
-		}
+		ReactDOM.render(<App/>, document.getElementById('root'));
 	</script>
 
 </body>
